@@ -96,21 +96,27 @@ class LogisticRegressor:
             # Logging
             if i % print_every == 0 and verbose:
                 print(f"Iteration {i}: Loss {loss}")
-
-            print("dw", dw.shape)
-            print("X", X.shape)
-            print("y", y.shape)
-            print("y_hat", y_hat.shape)
-            print("error", error.shape)
-            print("m", m)
-            print("n", n)
+            
+            # print("X", X.shape)
+            # print("y", y.shape)
+            # print("y_hat", y_hat.shape)
+            # print("m", m)
+            # print("n", n)
             y = y.reshape(-1)
-            error = y - y_hat
+            error = y-y_hat 
+            # print("error", error.shape)
             # Implement the gradient values
             # CAREFUL! You need to calculate the gradient of the loss function (*negative log-likelihood*)
             dw = -(1/m) * np.dot(np.transpose(X), error) # Derivative w.r.t. the coefficients
             db = -(1/m) * np.sum(error) # Derivative w.r.t. the intercept
-
+            # print("dw", dw.shape)
+                        
+            """    
+            X_unos = np.transpose(np.hstack((np.ones((X.shape[0], 1)), X)))
+            full = (1/m) * (X_unos)@(y_hat-y).astype("float")
+            dw = full[1:]   # Derivative w.r.t. the coefficients
+            db = full[0]    # Derivative w.r.t. the intercept
+            """
             # Regularization:
             # Apply regularization if it is selected.
             # We feed the regularization method the needed values, where "dw" is the derivative for the
@@ -140,7 +146,7 @@ class LogisticRegressor:
         """
 
         # z is the value of the logits. Write it here (use self.weights and self.bias):
-        z =  np.dot(X, np.transpose(self.weights)) + self.bias
+        z =  np.dot(X, self.weights) + self.bias
 
         # Return the associated probabilities via the sigmoid trasnformation (symmetric choice)
         return self.sigmoid(z)
